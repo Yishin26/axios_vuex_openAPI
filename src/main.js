@@ -3,40 +3,51 @@ import App from "./App.vue";
 import Vuex from "vuex";
 import VueRouter from "vue-router";
 import List from "./components/list.vue";
+import Edit from "./components/edit.vue";
 import axios from "axios";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
 
-let myRouter = [
-  {
-    path: "/",
-    name: "list",
-    component: List
-  },
+var routers = new VueRouter({
+  routes: [
+    {
+      path: "/",
+      name: "list",
+      component: List
+    },
+    {
+      path: "/update/:id",
+      name: "update",
+      component: Edit
+    },
+    {
+      path: "*",
+      redirect: "/"
+    }
+  ],
+  mode: "history"
+});
 
-  {
-    path: "*",
-    redirect: "/"
-  }
-];
-
-let routers = new VueRouter({ routes: myRouter, mode: "history" });
 let store = new Vuex.Store({
   state: {
     contents: []
   },
   mutations: {
+    //讀資料
     setContents(state, data) {
       state.contents = data;
     },
+    //加資料
     addContent(state, data) {
-      state.contents.push(data);
+      state.contents.unshift(data);
     },
+    //殺資料
     deleteContent(state, index) {
       console.log("DELETE");
       state.contents.splice(index, 1);
     }
+    //更新資料
   },
   actions: {
     CONTENTS_DELETE(context, item) {
@@ -64,7 +75,7 @@ let store = new Vuex.Store({
       return axios
         .get("https://lqrqc.sse.codesandbox.io/products")
         .then((res) => {
-          context.commit("setContents", res.data.reverse());
+          context.commit("setContents", res.data);
         });
     }
   }

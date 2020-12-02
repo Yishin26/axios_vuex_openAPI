@@ -2,19 +2,21 @@
   <div class="list">
     <p>
       <input type="text" placeholder="Input name..." v-model.trim="input" />
-      <button @click="createItem">CREATE</button>
+      <button @click="createItem">新增</button>
     </p>
     <h2>項目數：{{ contents.length }}</h2>
     <li class="list-item" v-for="(item, index) in contents" :key="item.id">
-      <h4>{{ index + 1 }}. {{ item.name }}</h4>
-      <p>{{ item.id }}</p>
+      <h4>
+        {{ index + 1 }}. Name:<span class="circle">{{ item.name }}</span>
+        id:<span class="circle gray-circle">{{ item.id }}</span>
+      </h4>
+
       <button class="delete-btn" @click="deleteItem(item)">刪除</button>
     </li>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 export default {
   name: "List",
   data() {
@@ -29,6 +31,9 @@ export default {
   },
 
   methods: {
+    gotoEdit(item) {
+      console.log(this);
+    },
     createItem() {
       //this=> vue
       this.$store.dispatch("CONTENTS_ADD", this.input).then((res) => {
@@ -57,6 +62,17 @@ export default {
   position: relative;
   margin: 12px;
 }
+.circle {
+  background: aquamarine;
+  margin: 5px;
+  padding: 2px 10px;
+  border-radius: 50px;
+}
+.gray-circle {
+  background-color: rgb(212, 212, 212);
+  color: rgb(80, 80, 80);
+}
+
 .delete-btn {
   position: absolute;
   right: 10px;
@@ -70,6 +86,14 @@ export default {
   padding: 2px 10px;
   &:hover {
     background: darken(orangered, 10%);
+  }
+}
+.edit-btn {
+  position: absolute;
+  right: 65px;
+  background: green;
+  &:hover {
+    background: darken(green, 10%);
   }
 }
 </style>
