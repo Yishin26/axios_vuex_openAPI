@@ -29,9 +29,23 @@ let store = new Vuex.Store({
   mutations: {
     setContents(state, data) {
       state.contents = data;
+    },
+    addContent(state, data) {
+      state.contents.push(data);
     }
   },
   actions: {
+    CONTENTS_ADD: (context, input) => {
+      if (!input) return false;
+      axios
+        .post("https://lqrqc.sse.codesandbox.io/products", {
+          name: input
+        })
+        .then((res) => {
+          // this.contents.push(res.data)
+          context.commit("addContent", res.data);
+        });
+    },
     CONTENTS_READ: (context) => {
       return axios
         .get("https://lqrqc.sse.codesandbox.io/products")
