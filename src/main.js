@@ -32,9 +32,23 @@ let store = new Vuex.Store({
     },
     addContent(state, data) {
       state.contents.push(data);
+    },
+    deleteContent(state, index) {
+      console.log("DELETE");
+      state.contents.splice(index, 1);
     }
   },
   actions: {
+    CONTENTS_DELETE(context, item) {
+      let index = context.state.contents.indexOf(item);
+      if (index == -1) return false;
+      //console.log(index);
+      return axios
+        .delete("https://lqrqc.sse.codesandbox.io/products/" + item.id)
+        .then((res) => {
+          context.commit("deleteContent", index);
+        });
+    },
     CONTENTS_ADD: (context, input) => {
       if (!input) return false;
       axios
@@ -50,7 +64,7 @@ let store = new Vuex.Store({
       return axios
         .get("https://lqrqc.sse.codesandbox.io/products")
         .then((res) => {
-          context.commit("setContents", res.data);
+          context.commit("setContents", res.data.reverse());
         });
     }
   }

@@ -8,7 +8,7 @@
     <li class="list-item" v-for="(item, index) in contents" :key="item.id">
       <h4>{{ index + 1 }}. {{ item.name }}</h4>
       <p>{{ item.id }}</p>
-      <button class="delete-btn">刪除</button>
+      <button class="delete-btn" @click="deleteItem(item)">刪除</button>
     </li>
   </div>
 </template>
@@ -27,12 +27,16 @@ export default {
       return this.$store.state.contents;
     },
   },
+
   methods: {
     createItem() {
       //this=> vue
       this.$store.dispatch("CONTENTS_ADD", this.input).then((res) => {
         this.input = "";
       });
+    },
+    deleteItem(item) {
+      this.$store.dispatch("CONTENTS_DELETE", item);
     },
   },
   mounted() {
